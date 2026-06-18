@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Examen Final Arquitectura de Computadores
+
+Resources:
+
+  ServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Acceso HTTP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  WebServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0cca150d127c2216f
+      InstanceType: t3.micro
+
+      SecurityGroups:
+        - !Ref ServerSecurityGroup
+
+      Tags:
+        - Key: Name
+          Value: Examen-Arq-PC-SebastianLeon
+
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y
+          yum install -y httpd
+
+          systemctl start httpd
+          systemctl enable httpd
+
+          cat <<'EOF' > /var/www/html/index.html
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+              <meta charset="UTF-8">
+              <title>Examen Final</title>
+
+              <style>
+
+                  body{
+                      background:#0f172a;
+                      font-family:Arial, sans-serif;
+                      display:flex;
+                      justify-content:center;
+                      align-items:center;
+                      height:100vh;
+                      color:white;
+                  }
+
+                  .card{
+                      background:#1e293b;
+                      padding:40px;
+                      border-radius:15px;
+                      text-align:center;
+                      width:600px;
+                  }
+
+                  h1{
+                      color:#38bdf8;
+                  }
+
+                  button{
+                      padding:10px 20px;
+                      cursor:pointer;
+                  }
+
+              </style>
+
+          </head>
+
+          <body>
+
+              <div class="card">
+
+                  <h1>Sebastián León</h1>
+
+                  <h2>Código: 0192506</h2>
+
+                  <p>Examen Final Arquitectura de Computadores</p>
+
+                  <button onclick="mensaje()">
+                      Ver Mensaje
+                  </button>
+
+              </div>
+
+              <script>
+
+                  function mensaje(){
+
+                      alert("Página desplegada correctamente desde AWS y GitHub Actions 🚀");
+
+                  }
+
+              </script>
+
+          </body>
+          </html>
+          EOF
+
+Outputs:
+
+  InstanceId:
+    Description: EC2 Instance ID
+    Value: !Ref WebServerInstance
