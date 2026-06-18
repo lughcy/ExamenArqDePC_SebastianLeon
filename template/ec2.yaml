@@ -79,11 +79,11 @@ Resources:
 
               <div class="card">
 
-                  <h1>Sebastián León</h1>
+                  <h1>Luifer Rojas</h1>
 
-                  <h2>Código: 0192506</h2>
+                  <h2>Código: 0192494</h2>
 
-                  <p>Examen Final Arquitectura de Computadores</p>
+                  <p>Cambio realizado por el compañero desde rama feature</p>
 
                   <button onclick="mensaje()">
                       Ver Mensaje
