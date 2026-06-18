@@ -1,10 +1,10 @@
-name: Deploy EC2
+name: Destroy EC2
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  destroy:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,13 +19,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Validate Template
+      - name: Delete CloudFormation Stack
         run: |
-          aws cloudformation validate-template \
-          --template-body file://template/ec2.yaml
+          aws cloudformation delete-stack \
+            --stack-name examen-arq-pc-stack
 
-      - name: Deploy CloudFormation Stack
+      - name: Wait for stack deletion
         run: |
-          aws cloudformation deploy \
-          --template-file template/ec2.yaml \
-          --stack-name examen-arq-pc-stack
+          aws cloudformation wait stack-delete-complete \
+            --stack-name examen-arq-pc-stack
+
+      - name: Verify deletion
+        run: |
+          echo "Stack eliminado correctamente"
